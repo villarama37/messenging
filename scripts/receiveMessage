@@ -1,0 +1,73 @@
+#!/usr/bin/env node
+const Sns = require(__dirname + './../src/Sns.js');
+const Sqs = require(__dirname + './../src/Sqs.js');
+const { TEST_QUEUE_1, TEST_QUEUE_2, TEST_TOPIC_NAME } = require(__dirname + './../src/constants');
+
+const sns = new Sns();
+const sqs = new Sqs();
+
+/**
+ * Processes messages from a queue
+ *  1. Prints the message
+ *  2. Deletes the message from the queue
+ */
+const processMessages = (messages, queueUrl) => {
+  (messages || []).forEach((message) => {
+    const { ReceiptHandle, Body } = message;
+    const { Message } = JSON.parse(Body);
+    console.log({ queueUrl, Message });
+    sqs.deleteMessage(queueUrl, ReceiptHandle);
+  });
+};
+
+/**
+ * Tries to get the Messages from the queue
+ */
+const getMessages = async () => {
+  const queueUrl1 = await sqs.findQueue(TEST_QUEUE_1);
+  const queueUrl2 = await sqs.findQueue(TEST_QUEUE_2);
+  processMessages(await sqs.receiveMessages(queueUrl1), queueUrl1);
+  processMessages(await sqs.receiveMessages(queueUrl2), queueUrl2);
+};
+
+const printInfo = (queue, attrs) => {
+  const { ApproximateNumberOfMessages, ApproximateNumberOfMessagesDelayed } = attrs;
+  console.log(`** ${queue} **`);
+  console.log(`  ApproximateNumberOfMessages = ${ApproximateNumberOfMessages}`);
+  console.log(`  ApproximateNumberOfMessagesDelayed = ${ApproximateNumberOfMessagesDelayed}`);
+};
+
+/**
+ * Gets the current state of the queues
+ */
+const queueInfo = async () => {
+  const queueUrl1 = await sqs.findQueue(TEST_QUEUE_1);
+  const queueUrl2 = await sqs.findQueue(TEST_QUEUE_2);
+
+  const attr1 = await sqs.getAttributes(queueUrl1);
+  const attr2 = await sqs.getAttributes(queueUrl2);
+
+  printInfo(queueUrl1, attr1);
+  printInfo(queueUrl2, attr2);
+};
+
+const sleep = () => {
+  return new Promise((resolve) => setTimeout(resolve, 3000));
+};
+
+/**
+ * Main
+ */
+(async () => {
+  try {
+    while (true) {
+      console.log('');
+      console.log('-------------------');
+      await queueInfo();
+      await getMessages();
+      sleep();
+    }
+  } catch (err) {
+    console.error(err);
+  }
+})();

@@ -47,7 +47,7 @@ class SnsWrapper {
     };
 
     const data = await sns.subscribe(params).promise();
-    console.log({ data });
+    //console.log({ data });
   }
 
   async sendMessage(TopicArn, Message) {
@@ -57,7 +57,7 @@ class SnsWrapper {
       Message
     };
     const data = await sns.publish(params).promise();
-    console.log({ data });
+    //console.log({ data });
   }
 
   async listSubscriptions(TopicArn) {

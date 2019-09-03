@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+const Sns = require(__dirname + './../src/Sns.js');
+const Sqs = require(__dirname + './../src/Sqs.js');
+const { TEST_QUEUE_1, TEST_QUEUE_2, TEST_TOPIC_NAME } = require(__dirname + './../src/constants');
+
+const sns = new Sns();
+const sqs = new Sqs();
+
+/**
+ * Deletes the Queues and the SNS Topic
+ */
+const cleanup = async () => {
+  const queueUrl1 = await sqs.findQueue(TEST_QUEUE_1);
+  const queueUrl2 = await sqs.findQueue(TEST_QUEUE_2);
+  const topic = await sns.createTopic(TEST_TOPIC_NAME);
+
+  await sqs.deleteQueue(queueUrl1);
+  await sqs.deleteQueue(queueUrl2);
+  await sns.deleteTopic(topic);
+};
+
+/**
+ * Main
+ */
+(async () => {
+  try {
+    cleanup();
+  } catch (err) {
+    console.error(err);
+  }
+})();

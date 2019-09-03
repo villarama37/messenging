@@ -4,10 +4,11 @@ const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
 
 class SqsWrapper {
   async createQueue(name) {
+    console.log(`Creating Queue: ${name}`);
     var params = {
       QueueName: name,
       Attributes: {
-        DelaySeconds: '60',
+        DelaySeconds: '10',
         MessageRetentionPeriod: '86400'
       }
     };
@@ -115,7 +116,7 @@ class SqsWrapper {
     };
 
     const data = await sqs.setQueueAttributes(params).promise();
-    console.log({ data });
+    //console.log({ data });
   }
 
   async getAttributes(queueUrl) {
