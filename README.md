@@ -25,7 +25,7 @@ When we change passwords, we would like to record the chage in history and also 
 
 By using SNS and SQS, we can decouple the services. After the password change is succesful, the Password Change Service sends a notification to a TOPIC in SNS.
 
-Two Queues are subscribe to this Topic. The history service queue and the email change queue. Both of these services, poll their respective queues for messages.
+Two Queues are subscribed to this Topic. The history service queue and the email change queue. Both of these services, poll their respective queues for messages.
 
 They receive and remove incoming messages in their queues.
 
