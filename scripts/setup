@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+const Sns = require(__dirname + './../src/Sns.js');
+const Sqs = require(__dirname + './../src/Sqs.js');
+const { TEST_QUEUE_1, TEST_QUEUE_2, TEST_TOPIC_NAME } = require(__dirname + './../src/constants');
+
+const sns = new Sns();
+const sqs = new Sqs();
+
+/**
+ * Setup:
+ *  1. Create 2 Queues (https://console.aws.amazon.com/sqs/home?region=us-west-2)
+ *  2. Create an SNS Topic (https://us-west-2.console.aws.amazon.com/sns/v3/home?region=us-west-2#/topics)
+ *  3. Adds policy to allow the SNS to send messages to the Queues
+ *  4. Subscribes the queues to the SNS Topic
+ *
+ *  Setup will be done once per environment.
+ */
+const setup = async () => {
+  const queueUrl1 = await sqs.createQueue(TEST_QUEUE_1);
+  const queueUrl2 = await sqs.createQueue(TEST_QUEUE_2);
+  const queueArn1 = await sqs.getArn(queueUrl1);
+  const queueArn2 = await sqs.getArn(queueUrl2);
+  const topic = await sns.createTopic(TEST_TOPIC_NAME);
+  sqs.setPolicy(queueUrl1, queueArn1, topic);
+  sqs.setPolicy(queueUrl2, queueArn2, topic);
+  await sns.subscribeSqs(topic, queueArn1);
+  await sns.subscribeSqs(topic, queueArn2);
+};
+
+/**
+ * Main
+ */
+(async () => {
+  try {
+    setup();
+  } catch (err) {
+    console.error(err);
+  }
+})();

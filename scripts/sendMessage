@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+const Sns = require(__dirname + './../src/Sns.js');
+const { TEST_TOPIC_NAME } = require(__dirname + './../src/constants');
+
+const sns = new Sns();
+
+/**
+ * Sends a messages to the Topic which forwards the messages to the Queues
+ */
+const sendMessage = async () => {
+  const topic = await sns.createTopic(TEST_TOPIC_NAME);
+  await sns.sendMessage(topic, 'sending this message yo!');
+}
+
+/**
+ * Main
+ */
+(async () => {
+  try {
+    sendMessage();
+  } catch (err) {
+    console.error(err);
+  }
+})();
