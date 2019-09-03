@@ -75,7 +75,7 @@ On a separate terminal, run the receive messages. This code runs in a loop. Poll
 Sends a message to the SNS Topic which will forward the message to both Queues.
 
 ```
-./scripts/recieveMessage
+./scripts/sendMessage
 ```
 
 ### Cleanup
@@ -83,5 +83,5 @@ Sends a message to the SNS Topic which will forward the message to both Queues.
 Deletes the SNS Topic and both SQS Queues
 
 ```
-./scripts/recieveMessage
+./scripts/cleanup
 ```
