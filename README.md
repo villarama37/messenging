@@ -8,10 +8,11 @@ SQS - Amazon Simple Queue Service is a fully managed message queuing service tha
 
 ## Links
 
+- [How To: Use SNS and SQS to Distribute and Throttle Events](https://www.jeremydaly.com/how-to-use-sns-and-sqs-to-distribute-and-throttle-events/)
 - [AWS Messenging Video](https://www.youtube.com/watch?v=UesxWuZMZqI&feature=youtu.be)
 - [SNS vs SQS](https://www.linkedin.com/pulse/difference-between-amazon-aws-snssimple-notification-sqs-khan-/)
 - https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/sns-examples-publishing-messages.html
-- [Distributted Trigger Pattern](https://www.jeremydaly.com/how-to-use-sns-and-sqs-to-distribute-and-throttle-events/)
+
 
 ## Example Overview of Service to Service Messaging
 
