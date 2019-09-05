@@ -60,7 +60,9 @@ This creates an SNS Topic and 2 SQS Queues. It subscribe the Queues to the topic
 ./scripts/setup
 ```
 
-We should only do this once per environment.
+Notes:
+
+- We should only do this once per environment. Do we need to convert this code to a SAM template(?)
 
 ### Receive Messages
 
@@ -69,6 +71,11 @@ On a separate terminal, run the receive messages. This code runs in a loop. Poll
 ```
 ./scripts/recieveMessage
 ```
+
+Notes:
+
+- I imagine a lambda will try to process the messages in the queue.
+- We could skip the SQS and have SNS directly hit an endpoint. But this removes the ability to throttle processing messages.
 
 ### Send Message
 
